@@ -9,6 +9,13 @@ import (
 	"testing"
 )
 
+func TestLinkedList_ToArray_empty(t *testing.T) {
+	list := NewLinkedList[int]()
+	actual := list.ToArray()
+	if len(actual) != 0 {
+		t.Fatal("an empty array is expected")
+	}
+}
 func TestLinkedList_ToArray(t *testing.T) {
 	list := NewLinkedList[int]()
 	list.AddFirst(3)
