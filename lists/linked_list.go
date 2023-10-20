@@ -11,10 +11,23 @@ type LinkedList[T any] struct {
 	size  int
 }
 
+func (list *LinkedList[T]) AddLast(value T) {
+	item := &listItem[T]{value: value}
+	if list.last != nil {
+		item.prev = list.last
+		list.last.next = item
+		list.last = item
+	} else {
+		list.first = item
+		list.last = item
+	}
+	list.size++
+}
 func (list *LinkedList[T]) AddFirst(value T) {
 	item := &listItem[T]{value: value}
 	if list.first != nil {
 		item.next = list.first
+		list.first.prev = item.next
 		list.first = item
 	} else {
 		list.first = item
@@ -33,6 +46,13 @@ func (list *LinkedList[T]) GetLast() (T, bool) {
 		return list.last.value, true
 	}
 	return new(listItem[T]).value, false
+}
+func (list *LinkedList[T]) ToArray() []T {
+	result := make([]T, list.size)
+	for i, item := 0, list.first; item != nil; i, item = i+1, item.next {
+		result[i] = item.value
+	}
+	return result
 }
 func (list *LinkedList[T]) Clear() {
 	list.first = nil
