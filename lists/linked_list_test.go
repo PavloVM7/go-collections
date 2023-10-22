@@ -11,6 +11,126 @@ import (
 	"testing"
 )
 
+func TestLinkedList_Remove(t *testing.T) {
+	const (
+		want1 = 1
+		want2 = 2
+		want3 = 3
+		want4 = 4
+	)
+	list := NewLinkedList[int]()
+	list.AddLast(want1)
+	list.AddLast(want2)
+	list.AddLast(want3)
+	list.AddLast(want4)
+	got3, _ := list.Remove(2)
+	if got3 != want3 {
+		t.Fatalf("unexpected value: %v, want: %v", got3, want3)
+	}
+	gotAr1 := list.ToArray()
+	wantAr1 := []int{1, 2, 4}
+	if !reflect.DeepEqual(gotAr1, wantAr1) {
+		t.Fatalf("Remove() got: %v, want: %v", gotAr1, wantAr1)
+	}
+
+	got1, _ := list.Remove(0)
+	if got1 != want1 {
+		t.Fatalf("unexpected value: %v, want: %v", got1, want1)
+	}
+	gotAr2 := list.ToArray()
+	wantAr2 := []int{2, 4}
+	if !reflect.DeepEqual(gotAr2, wantAr2) {
+		t.Fatalf("Remove() got: %v, want: %v", gotAr2, wantAr2)
+	}
+
+	got4, _ := list.Remove(1)
+	if got4 != want4 {
+		t.Fatalf("unexpected value: %v, want: %v", got4, want4)
+	}
+	gotAr3 := list.ToArray()
+	wantAr3 := []int{2}
+	if !reflect.DeepEqual(gotAr3, wantAr3) {
+		t.Fatalf("Remove() got: %v, want: %v", gotAr3, wantAr3)
+	}
+
+	got2, _ := list.Remove(0)
+	if got2 != want2 {
+		t.Fatalf("unexpected value: %v, want: %v", got2, want2)
+	}
+	gotAr4 := list.ToArray()
+	if len(gotAr4) != 0 {
+		t.Fatal("empty array expected, got:", gotAr4)
+	}
+}
+func TestLinkedList_Remove_last(t *testing.T) {
+	const expected1 = "value 1"
+	const expected2 = "value 2"
+	list := NewLinkedList[string]()
+	list.AddLast(expected1)
+	list.AddLast(expected2)
+	actual, err := list.Remove(list.Size() - 1)
+	if err != nil {
+		t.Fatal("unexpected error:", err)
+	}
+	if actual != expected2 {
+		t.Fatalf("unexpected value: '%s', want: '%s'", actual, expected2)
+	}
+	if list.Size() != 1 {
+		t.Fatalf("unexpected list size: %d, want: %d", list.Size(), 1)
+	}
+	first, _ := list.GetFirst()
+	if first != expected1 {
+		t.Fatalf("unexpected first value: '%v'; want: '%v'", first, expected1)
+	}
+	last, _ := list.GetLast()
+	if last != expected1 {
+		t.Fatalf("unexpected first value: '%v'; want: '%v'", last, expected1)
+	}
+	if list.first != list.last {
+		t.Fatalf("values 'first' and 'last' must be the same; actual values: first: %v, last: %v",
+			list.first, list.last)
+	}
+}
+func TestLinkedList_Remove_single(t *testing.T) {
+	const expected = "single value"
+	list := NewLinkedList[string]()
+	list.AddLast(expected)
+	actual, err := list.Remove(0)
+	if err != nil {
+		t.Fatal("unexpected error:", err)
+	}
+	if actual != expected {
+		t.Fatalf("unexpected value: '%s', expected: '%s'", actual, expected)
+	}
+	if list.Size() != 0 {
+		t.Fatalf("unexpected list size: %d, want: %d", list.Size(), 0)
+	}
+	if list.first != nil {
+		t.Fatal("the first item should be nil, actual:", list.first)
+	}
+	if list.last != nil {
+		t.Fatal("the last value should be nil, actual:", list.last)
+	}
+}
+func TestLinkedList_Remove_fail(t *testing.T) {
+	list := NewLinkedList[string]()
+	actual, err := list.Remove(0)
+	if !errors.Is(err, ErrIndexOutOfRange) {
+		t.Fatalf("expected error: '%v', got: '%v'", ErrIndexOutOfRange, err)
+	}
+	if actual != "" {
+		t.Fatalf("expected: '', actual: '%s'", actual)
+	}
+	list.AddLast("value")
+	actual, err = list.Remove(1)
+	if !errors.Is(err, ErrIndexOutOfRange) {
+		t.Fatalf("expected error: '%v', got: '%v'", ErrIndexOutOfRange, err)
+	}
+	if actual != "" {
+		t.Fatalf("expected: '', actual: '%s'", actual)
+	}
+}
+
 func TestLinkedList_RemoveFirst(t *testing.T) {
 	list := NewLinkedList[int]()
 	list.AddLast(1)
@@ -51,7 +171,7 @@ func TestLinkedList_RemoveFirst_before_last(t *testing.T) {
 		t.Fatalf("unexpected value: %v, expected: true", ok)
 	}
 	if actual != 1 {
-		t.Fatalf("expected: %v, actual: %v", 0, actual)
+		t.Fatalf("expected: %v, actual: %v", 1, actual)
 	}
 	if list.Size() != 1 {
 		t.Fatalf("unexpeted list size: %v, want: %v", list.Size(), 1)
@@ -79,7 +199,7 @@ func TestLinkedList_RemoveFirst_before_last(t *testing.T) {
 	}
 	last, _ := list.GetLast()
 	if last != 2 {
-		t.Fatalf("wrong last value: %v, want: %v", list, 2)
+		t.Fatalf("wrong last value: %v, want: %v", last, 2)
 	}
 }
 func TestLinkedList_RemoveFirst_single(t *testing.T) {
@@ -108,6 +228,111 @@ func TestLinkedList_RemoveFirst_single(t *testing.T) {
 func TestLinkedList_RemoveFirst_empty(t *testing.T) {
 	list := NewLinkedList[int]()
 	actual, ok := list.RemoveFirst()
+	if ok {
+		t.Fatalf("unexpected value: %v, expected: false", ok)
+	}
+	if actual != 0 {
+		t.Fatalf("unexpected value: %v, expected: %v", actual, 0)
+	}
+}
+
+func TestLinkedList_RemoveLast(t *testing.T) {
+	list := NewLinkedList[int]()
+	list.AddFirst(1)
+	list.AddFirst(2)
+	list.AddFirst(3)
+	expectedSize := list.Size()
+	for i := 0; i < 3; i++ {
+		actual, ok := list.RemoveLast()
+		if !ok {
+			t.Fatal("the first element must exist")
+		}
+		expectedValue := i + 1
+		if actual != expectedValue {
+			t.Fatalf("wrong value: %v, want: %v", actual, expectedValue)
+		}
+		expectedSize--
+		if list.Size() != expectedSize {
+			t.Fatalf("wrong list size: %v, want: %v", list.Size(), expectedSize)
+		}
+	}
+	actual, ok := list.RemoveLast()
+	if ok {
+		t.Fatal("the list must be empty")
+	}
+	if actual != 0 {
+		t.Fatalf("wrong value: %v, want: %v", actual, 0)
+	}
+}
+func TestLinkedList_RemoveLast_before_last(t *testing.T) {
+	list := NewLinkedList[int]()
+	list.AddLast(2)
+	list.AddFirst(1)
+	if list.Size() != 2 {
+		t.Fatal("unexpected list size:", list.Size(), "expected:", 2)
+	}
+	actual, ok := list.RemoveLast()
+	if !ok {
+		t.Fatalf("unexpected value: %v, expected: true", ok)
+	}
+	if actual != 2 {
+		t.Fatalf("expected: %v, actual: %v", 2, actual)
+	}
+	if list.Size() != 1 {
+		t.Fatalf("unexpeted list size: %v, want: %v", list.Size(), 1)
+	}
+	if list.first == nil {
+		t.Fatal("the first element must exist")
+	}
+	if list.last == nil {
+		t.Fatal("the last element must exist")
+	}
+	if list.first.prev != nil {
+		t.Fatal("the 'prev' value of the first element must be nil")
+	}
+	if list.first.next != nil {
+		t.Fatal("the 'next' value of the first element must be nil")
+	}
+	if list.last.prev != nil {
+		t.Fatal("the 'prev' value of the last element must be nil")
+	}
+	if list.last.next != nil {
+		t.Fatal("the 'next' value of the last element must be nil")
+	}
+	if list.last != list.first {
+		t.Fatal("values 'first' and 'last' must be the same")
+	}
+	first, _ := list.GetFirst()
+	if first != 1 {
+		t.Fatalf("wrong last value: %v, want: %v", first, 1)
+	}
+}
+func TestLinkedList_RemoveLast_single(t *testing.T) {
+	list := NewLinkedList[int]()
+	list.AddFirst(1)
+	if list.Size() != 1 {
+		t.Fatal("unexpected list size:", list.Size(), "expected:", 1)
+	}
+	actual, ok := list.RemoveLast()
+	if !ok {
+		t.Fatalf("unexpected value: %v, expected: true", ok)
+	}
+	if actual != 1 {
+		t.Fatalf("expected: %v, actual: %v", 0, actual)
+	}
+	if list.Size() != 0 {
+		t.Fatalf("unexpeted list size: %v, want: %v", list.Size(), 0)
+	}
+	if list.first != nil {
+		t.Fatal("the first item should be nil, actual:", list.first)
+	}
+	if list.last != nil {
+		t.Fatal("the last value should be nil, actual:", list.last)
+	}
+}
+func TestLinkedList_RemoveLast_empty(t *testing.T) {
+	list := NewLinkedList[int]()
+	actual, ok := list.RemoveLast()
 	if ok {
 		t.Fatalf("unexpected value: %v, expected: false", ok)
 	}

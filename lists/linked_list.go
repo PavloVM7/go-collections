@@ -20,8 +20,7 @@ type LinkedList[T any] struct {
 func (list *LinkedList[T]) AddLast(value T) {
 	item := &listItem[T]{value: value}
 	if list.last != nil {
-		item.prev = list.last
-		list.last.next = item
+		list.last.append(item)
 		list.last = item
 	} else {
 		list.first = item
@@ -32,8 +31,7 @@ func (list *LinkedList[T]) AddLast(value T) {
 func (list *LinkedList[T]) AddFirst(value T) {
 	item := &listItem[T]{value: value}
 	if list.first != nil {
-		item.next = list.first
-		list.first.prev = item.next
+		list.first.insert(item)
 		list.first = item
 	} else {
 		list.first = item
@@ -56,22 +54,19 @@ func (list *LinkedList[T]) GetLast() (T, bool) {
 	return res, false
 }
 func (list *LinkedList[T]) Get(index int) (T, error) {
-	if index >= 0 && index < list.size {
-		for i, item := 0, list.first; item != nil; i, item = i+1, item.next {
-			if i == index {
-				return item.value, nil
-			}
-		}
+	item, err := list.get(index)
+	if err == nil {
+		return item.value, nil
 	}
 	var res T
-	return res, ErrIndexOutOfRange
+	return res, err
 }
 func (list *LinkedList[T]) RemoveFirst() (T, bool) {
 	var res T
 	if list.first != nil {
 		res = list.first.value
 		if list.first.next != nil {
-			list.first.next.prev = nil
+			list.first.remove()
 			list.first = list.first.next
 		} else {
 			list.first = nil
@@ -81,6 +76,48 @@ func (list *LinkedList[T]) RemoveFirst() (T, bool) {
 		return res, true
 	}
 	return res, false
+}
+func (list *LinkedList[T]) RemoveLast() (T, bool) {
+	var res T
+	if list.last != nil {
+		res = list.last.value
+		if list.last.prev != nil {
+			list.last.remove()
+			list.last = list.last.prev
+		} else {
+			list.first = nil
+			list.last = nil
+		}
+		list.size--
+		return res, true
+	}
+	return res, false
+}
+func (list *LinkedList[T]) Remove(index int) (T, error) {
+	item, err := list.get(index)
+	var res T
+	if err == nil {
+		res = item.value
+		item.remove()
+		if list.first == item {
+			list.first = item.next
+		}
+		if list.last == item {
+			list.last = item.prev
+		}
+		list.size--
+	}
+	return res, err
+}
+func (list *LinkedList[T]) get(index int) (*listItem[T], error) {
+	if index >= 0 && index < list.size {
+		for i, item := 0, list.first; item != nil; i, item = i+1, item.next {
+			if i == index {
+				return item, nil
+			}
+		}
+	}
+	return nil, ErrIndexOutOfRange
 }
 func (list *LinkedList[T]) ToArray() []T {
 	result := make([]T, list.size)
@@ -99,10 +136,4 @@ func (list *LinkedList[T]) Size() int {
 }
 func NewLinkedList[T any]() *LinkedList[T] {
 	return &LinkedList[T]{}
-}
-
-type listItem[T any] struct {
-	prev  *listItem[T]
-	next  *listItem[T]
-	value T
 }
