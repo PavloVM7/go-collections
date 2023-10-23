@@ -1,7 +1,5 @@
 package lists
 
-import "fmt"
-
 type listItem[T any] struct {
 	prev  *listItem[T]
 	next  *listItem[T]
@@ -26,12 +24,7 @@ func (li *listItem[T]) remove() {
 		li.next.prev = li.prev
 	}
 }
-func (li *listItem[T]) String() string {
-	vs := ""
-	if s, ok := any(li.value).(string); ok {
-		vs = "'" + s + "'"
-	} else {
-		vs = fmt.Sprint(li.value)
-	}
-	return fmt.Sprintf("listItem[%T]{value: %s, prev: %v, next: %v}", li.value, vs, li.prev, li.next)
+
+func swapListItems[T any](item1, item2 *listItem[T]) {
+	item1.value, item2.value = item2.value, item1.value
 }

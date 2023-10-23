@@ -134,6 +134,17 @@ func (list *LinkedList[T]) Clear() {
 func (list *LinkedList[T]) Size() int {
 	return list.size
 }
+
+// NewLinkedList constructs an empty list
 func NewLinkedList[T any]() *LinkedList[T] {
 	return &LinkedList[T]{}
+}
+
+// NewLinkedListItems constructs a list containing the specified elements
+func NewLinkedListItems[T any](items ...T) *LinkedList[T] {
+	result := NewLinkedList[T]()
+	for _, item := range items {
+		result.AddLast(item)
+	}
+	return result
 }
