@@ -8,16 +8,18 @@ package lists
 import "errors"
 
 var (
-	ErrIndexOutOfRange = errors.New("index out of range")
+	ErrIndexOutOfRange = errors.New("index is out of range")
 )
 
+// LinkedList is an implementation of a doubly-linked list.
 type LinkedList[T any] struct {
 	first *listItem[T]
 	last  *listItem[T]
 	size  int
 }
 
-// AddLast appends specified element to the end of this list
+// AddLast appends specified element to the end of this list.
+//   - value - the value to be appended
 func (list *LinkedList[T]) AddLast(value T) {
 	item := &listItem[T]{value: value}
 	if list.last != nil {
@@ -30,7 +32,8 @@ func (list *LinkedList[T]) AddLast(value T) {
 	list.size++
 }
 
-// AddFirst inserts specified element to the beginning this list
+// AddFirst inserts specified element to the beginning this list.
+//   - value - the value to be inserted
 func (list *LinkedList[T]) AddFirst(value T) {
 	item := &listItem[T]{value: value}
 	if list.first != nil {
@@ -134,6 +137,9 @@ func (list *LinkedList[T]) removeItem(item *listItem[T]) T {
 	list.size--
 	return res
 }
+
+// RemoveFirstOccurrence removes the first occurrence of the specified element in this list
+// (when traversing the list from head to tail).
 func (list *LinkedList[T]) RemoveFirstOccurrence(needRemove func(value T) bool) (T, int) {
 	var index = -1
 	item := list.first
