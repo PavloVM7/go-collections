@@ -118,17 +118,59 @@ func (list *LinkedList[T]) Remove(index int) (T, error) {
 	item, err := list.get(index)
 	var res T
 	if err == nil {
-		res = item.value
-		item.remove()
-		if list.first == item {
-			list.first = item.next
-		}
-		if list.last == item {
-			list.last = item.prev
-		}
-		list.size--
+		res = list.removeItem(item)
 	}
 	return res, err
+}
+func (list *LinkedList[T]) removeItem(item *listItem[T]) T {
+	res := item.value
+	item.remove()
+	if list.first == item {
+		list.first = item.next
+	}
+	if list.last == item {
+		list.last = item.prev
+	}
+	list.size--
+	return res
+}
+func (list *LinkedList[T]) RemoveFirstOccurrence(needRemove func(value T) bool) (T, int) {
+	var index = -1
+	item := list.first
+	for item != nil {
+		index++
+		if needRemove(item.value) {
+			return list.removeItem(item), index
+		}
+		item = item.next
+	}
+	var res T
+	return res, -1
+}
+func (list *LinkedList[T]) RemoveLastOccurrence(needRemove func(value T) bool) (T, int) {
+	var index = list.size
+	item := list.last
+	for item != nil {
+		index--
+		if needRemove(item.value) {
+			return list.removeItem(item), index
+		}
+		item = item.prev
+	}
+	var res T
+	return res, -1
+}
+func (list *LinkedList[T]) RemoveAll(needRemove func(value T) bool) int {
+	count := 0
+	item := list.first
+	for item != nil {
+		if needRemove(item.value) {
+			list.removeItem(item)
+			count++
+		}
+		item = item.next
+	}
+	return count
 }
 func (list *LinkedList[T]) get(index int) (*listItem[T], error) {
 	if index >= 0 && index < list.size {
