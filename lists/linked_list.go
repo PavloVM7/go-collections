@@ -8,6 +8,7 @@ package lists
 import "errors"
 
 var (
+	// ErrIndexOutOfRange error: 'index is out of range'
 	ErrIndexOutOfRange = errors.New("index is out of range")
 )
 
@@ -69,7 +70,7 @@ func (list *LinkedList[T]) GetLast() (T, bool) {
 // Get returns an item at the specified position in this list
 // or a default value of type T and an error if the index is out of range.
 func (list *LinkedList[T]) Get(index int) (T, error) {
-	item, err := list.get(index)
+	item, err := list.getByIndex(index)
 	if err == nil {
 		return item.value, nil
 	}
@@ -84,7 +85,7 @@ func (list *LinkedList[T]) RemoveFirst() (T, bool) {
 	if list.first != nil {
 		res = list.first.value
 		if list.first.next != nil {
-			list.first.remove()
+			list.first.removeYourself()
 			list.first = list.first.next
 		} else {
 			list.first = nil
@@ -103,7 +104,7 @@ func (list *LinkedList[T]) RemoveLast() (T, bool) {
 	if list.last != nil {
 		res = list.last.value
 		if list.last.prev != nil {
-			list.last.remove()
+			list.last.removeYourself()
 			list.last = list.last.prev
 		} else {
 			list.first = nil
@@ -118,7 +119,7 @@ func (list *LinkedList[T]) RemoveLast() (T, bool) {
 // Remove removes the element at the specified position in this list and returns its value
 // or a default value of type T and an error if the index is out of range.
 func (list *LinkedList[T]) Remove(index int) (T, error) {
-	item, err := list.get(index)
+	item, err := list.getByIndex(index)
 	var res T
 	if err == nil {
 		res = list.removeItem(item)
@@ -127,7 +128,7 @@ func (list *LinkedList[T]) Remove(index int) (T, error) {
 }
 func (list *LinkedList[T]) removeItem(item *listItem[T]) T {
 	res := item.value
-	item.remove()
+	item.removeYourself()
 	if list.first == item {
 		list.first = item.next
 	}
@@ -138,14 +139,16 @@ func (list *LinkedList[T]) removeItem(item *listItem[T]) T {
 	return res
 }
 
-// RemoveFirstOccurrence removes the first occurrence of the specified element in this list
-// (when traversing the list from head to tail).
-func (list *LinkedList[T]) RemoveFirstOccurrence(needRemove func(value T) bool) (T, int) {
+// RemoveFirstOccurrence removes from the list the first occurrence of an element that satisfies the condition
+// specified by the function (when traversing the list from head to tail).
+// Returns the value and index of the removed element, or a default value of type T and -1 if no element was removed.
+//   - needToRemove - a function that is applied to each element to determine if it should be deleted
+func (list *LinkedList[T]) RemoveFirstOccurrence(needToRemove func(value T) bool) (T, int) {
 	var index = -1
 	item := list.first
 	for item != nil {
 		index++
-		if needRemove(item.value) {
+		if needToRemove(item.value) {
 			return list.removeItem(item), index
 		}
 		item = item.next
@@ -153,12 +156,17 @@ func (list *LinkedList[T]) RemoveFirstOccurrence(needRemove func(value T) bool) 
 	var res T
 	return res, -1
 }
-func (list *LinkedList[T]) RemoveLastOccurrence(needRemove func(value T) bool) (T, int) {
+
+// RemoveLastOccurrence removes from the list the last occurrence of an element that satisfies the condition
+// specified by the needToRemove function (when traversing the list from tail to head).
+// Returns the value and index of the removed element, or a default value of type T and -1 if no element was removed.
+//   - needToRemove - a function that is applied to each element to determine if it should be deleted
+func (list *LinkedList[T]) RemoveLastOccurrence(needToRemove func(value T) bool) (T, int) {
 	var index = list.size
 	item := list.last
 	for item != nil {
 		index--
-		if needRemove(item.value) {
+		if needToRemove(item.value) {
 			return list.removeItem(item), index
 		}
 		item = item.prev
@@ -166,6 +174,10 @@ func (list *LinkedList[T]) RemoveLastOccurrence(needRemove func(value T) bool) (
 	var res T
 	return res, -1
 }
+
+// RemoveAll removes from the list all elements that satisfy the condition specified by the needToRemove function.
+// Returns the number of elements removed
+//   - needToRemove - a function that is applied to each element to determine if it should be deleted
 func (list *LinkedList[T]) RemoveAll(needRemove func(value T) bool) int {
 	count := 0
 	item := list.first
@@ -178,7 +190,7 @@ func (list *LinkedList[T]) RemoveAll(needRemove func(value T) bool) int {
 	}
 	return count
 }
-func (list *LinkedList[T]) get(index int) (*listItem[T], error) {
+func (list *LinkedList[T]) getByIndex(index int) (*listItem[T], error) {
 	if index >= 0 && index < list.size {
 		for i, item := 0, list.first; item != nil; i, item = i+1, item.next {
 			if i == index {

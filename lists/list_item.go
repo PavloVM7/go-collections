@@ -16,7 +16,7 @@ func (li *listItem[T]) append(item *listItem[T]) {
 	item.next = li.next
 	li.next = item
 }
-func (li *listItem[T]) remove() {
+func (li *listItem[T]) removeYourself() {
 	if li.prev != nil {
 		li.prev.next = li.next
 	}

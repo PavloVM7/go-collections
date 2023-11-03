@@ -26,8 +26,8 @@ func Test_swapListItems(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			item1, _ := tt.args.list.get(tt.args.index1)
-			item2, _ := tt.args.list.get(tt.args.index2)
+			item1, _ := tt.args.list.getByIndex(tt.args.index1)
+			item2, _ := tt.args.list.getByIndex(tt.args.index2)
 			swapListItems(item1, item2)
 			actual := tt.args.list.ToArray()
 			if !reflect.DeepEqual(actual, tt.args.want) {

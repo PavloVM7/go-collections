@@ -758,7 +758,6 @@ func TestLinkedList_GetFirst_empty_list(t *testing.T) {
 	}
 }
 func TestLinkedList_GetFirst_empty_list_not_nil(t *testing.T) {
-
 	list := NewLinkedList[int]()
 	actual, ok := list.GetFirst()
 	if ok {

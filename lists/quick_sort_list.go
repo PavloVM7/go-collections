@@ -1,9 +1,13 @@
 package lists
 
+// SortList sorts the list according to the order specified by the less function.
+//   - less - the function used to compare list elements
 func SortList[T any](list *LinkedList[T], less func(item1, item2 T) bool) {
 	sortItems[T](list.first, list.last, less)
 }
 
+//revive:disable:cognitive-complexity
+//revive:disable:cyclomatic
 func sortItems[T any](start, end *listItem[T], less func(item1, item2 T) bool) {
 	if start == nil || start == end || start == end.next || start.next == nil {
 		return
@@ -26,6 +30,10 @@ func sortItems[T any](start, end *listItem[T], less func(item1, item2 T) bool) {
 	}
 }
 
+//revive:enable:cyclomatic
+//revive:enable:cognitive-complexity
+
+//revive:disable:cognitive-complexity
 func circleLeftShiftIterator[T any](ar []T) func() []T {
 	cpy := make([]T, len(ar))
 	copy(cpy, ar)
@@ -57,12 +65,11 @@ func circleLeftShiftIterator[T any](ar []T) func() []T {
 				if indexes[k] != k {
 					k = last
 					break
-				} else {
-					k--
-					if k < 0 {
-						k = last
-						return retArray()
-					}
+				}
+				k--
+				if k < 0 {
+					k = last
+					return retArray()
 				}
 			}
 		} else {
@@ -71,3 +78,5 @@ func circleLeftShiftIterator[T any](ar []T) func() []T {
 		return retArray()
 	}
 }
+
+//revive:enable:cognitive-complexity
