@@ -81,15 +81,7 @@ func (list *LinkedList[T]) Get(index int) (T, error) {
 func (list *LinkedList[T]) RemoveFirst() (T, bool) {
 	var res T
 	if list.first != nil {
-		res = list.first.value
-		if list.first.next != nil {
-			list.first.removeYourself()
-			list.first = list.first.next
-		} else {
-			list.first = nil
-			list.last = nil
-		}
-		list.size--
+		res = list.removeItem(list.first)
 		return res, true
 	}
 	return res, false
@@ -100,15 +92,7 @@ func (list *LinkedList[T]) RemoveFirst() (T, bool) {
 func (list *LinkedList[T]) RemoveLast() (T, bool) {
 	var res T
 	if list.last != nil {
-		res = list.last.value
-		if list.last.prev != nil {
-			list.last.removeYourself()
-			list.last = list.last.prev
-		} else {
-			list.first = nil
-			list.last = nil
-		}
-		list.size--
+		res = list.removeItem(list.last)
 		return res, true
 	}
 	return res, false

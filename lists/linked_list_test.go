@@ -470,7 +470,7 @@ func TestLinkedList_RemoveLast(t *testing.T) {
 	for i := 0; i < 3; i++ {
 		actual, ok := list.RemoveLast()
 		if !ok {
-			t.Fatal("the first element must exist")
+			t.Fatal("the last element must exist")
 		}
 		expectedValue := i + 1
 		if actual != expectedValue {
@@ -558,6 +558,9 @@ func TestLinkedList_RemoveLast_single(t *testing.T) {
 func TestLinkedList_RemoveLast_empty(t *testing.T) {
 	list := NewLinkedList[int]()
 	actual, ok := list.RemoveLast()
+	if list.Size() != 0 {
+		t.Fatal("wrong list size, expected:", 0, "actual:", list.Size())
+	}
 	if ok {
 		t.Fatalf("unexpected value: %v, expected: false", ok)
 	}
