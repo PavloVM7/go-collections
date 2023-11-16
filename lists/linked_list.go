@@ -25,11 +25,10 @@ func (list *LinkedList[T]) AddLast(value T) {
 	item := &listItem[T]{value: value}
 	if list.last != nil {
 		list.last.append(item)
-		list.last = item
 	} else {
 		list.first = item
-		list.last = item
 	}
+	list.last = item
 	list.size++
 }
 
@@ -39,11 +38,10 @@ func (list *LinkedList[T]) AddFirst(value T) {
 	item := &listItem[T]{value: value}
 	if list.first != nil {
 		list.first.insert(item)
-		list.first = item
 	} else {
-		list.first = item
 		list.last = item
 	}
+	list.first = item
 	list.size++
 }
 
