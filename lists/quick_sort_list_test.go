@@ -147,7 +147,7 @@ func Test_circleLeftShift_string(t *testing.T) {
 				t.Log(got)
 			}
 			if len(exists) != count {
-				t.Fatalf("wrong array length: %d, want: %d", len(exists), count)
+				t.Fatalf("incorrect array length: %d, want: %d", len(exists), count)
 			}
 		})
 	}
@@ -193,7 +193,7 @@ func Test_circleLeftShift_int(t *testing.T) {
 				t.Log(got)
 			}
 			if len(exists) != count {
-				t.Fatalf("wrong array length: %d, want: %d", len(exists), count)
+				t.Fatalf("incorrect array length: %d, want: %d", len(exists), count)
 			}
 		})
 	}

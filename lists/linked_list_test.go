@@ -369,11 +369,11 @@ func TestLinkedList_RemoveFirst(t *testing.T) {
 		}
 		expectedValue := i + 1
 		if actual != expectedValue {
-			t.Fatalf("wrong value: %v, want: %v", actual, expectedValue)
+			t.Fatalf("incorrect value: %v, want: %v", actual, expectedValue)
 		}
 		expectedSize--
 		if list.Size() != expectedSize {
-			t.Fatalf("wrong list size: %v, want: %v", list.Size(), expectedSize)
+			t.Fatalf("incorrect list size: %v, want: %v", list.Size(), expectedSize)
 		}
 	}
 	actual, ok := list.RemoveFirst()
@@ -381,7 +381,7 @@ func TestLinkedList_RemoveFirst(t *testing.T) {
 		t.Fatal("the list must be empty")
 	}
 	if actual != 0 {
-		t.Fatalf("wrong value: %v, want: %v", actual, 0)
+		t.Fatalf("incorrect value: %v, want: %v", actual, 0)
 	}
 }
 func TestLinkedList_RemoveFirst_before_last(t *testing.T) {
@@ -424,7 +424,7 @@ func TestLinkedList_RemoveFirst_before_last(t *testing.T) {
 	}
 	last, _ := list.GetLast()
 	if last != 2 {
-		t.Fatalf("wrong last value: %v, want: %v", last, 2)
+		t.Fatalf("incorrect last value: %v, want: %v", last, 2)
 	}
 }
 func TestLinkedList_RemoveFirst_single(t *testing.T) {
@@ -474,11 +474,11 @@ func TestLinkedList_RemoveLast(t *testing.T) {
 		}
 		expectedValue := i + 1
 		if actual != expectedValue {
-			t.Fatalf("wrong value: %v, want: %v", actual, expectedValue)
+			t.Fatalf("incorrect value: %v, want: %v", actual, expectedValue)
 		}
 		expectedSize--
 		if list.Size() != expectedSize {
-			t.Fatalf("wrong list size: %v, want: %v", list.Size(), expectedSize)
+			t.Fatalf("incorrect list size: %v, want: %v", list.Size(), expectedSize)
 		}
 	}
 	actual, ok := list.RemoveLast()
@@ -486,7 +486,7 @@ func TestLinkedList_RemoveLast(t *testing.T) {
 		t.Fatal("the list must be empty")
 	}
 	if actual != 0 {
-		t.Fatalf("wrong value: %v, want: %v", actual, 0)
+		t.Fatalf("incorrect value: %v, want: %v", actual, 0)
 	}
 }
 func TestLinkedList_RemoveLast_before_last(t *testing.T) {
@@ -529,7 +529,7 @@ func TestLinkedList_RemoveLast_before_last(t *testing.T) {
 	}
 	first, _ := list.GetFirst()
 	if first != 1 {
-		t.Fatalf("wrong last value: %v, want: %v", first, 1)
+		t.Fatalf("incorrect last value: %v, want: %v", first, 1)
 	}
 }
 func TestLinkedList_RemoveLast_single(t *testing.T) {
@@ -559,7 +559,7 @@ func TestLinkedList_RemoveLast_empty(t *testing.T) {
 	list := NewLinkedList[int]()
 	actual, ok := list.RemoveLast()
 	if list.Size() != 0 {
-		t.Fatal("wrong list size, expected:", 0, "actual:", list.Size())
+		t.Fatal("incorrect list size, expected:", 0, "actual:", list.Size())
 	}
 	if ok {
 		t.Fatalf("unexpected value: %v, expected: false", ok)
@@ -580,7 +580,7 @@ func TestLinkedList_Get(t *testing.T) {
 	list.AddLast(crt(4))
 	list.AddLast(crt(5))
 	if list.Size() != 5 {
-		t.Fatal("wrong list size, expected:", 5, "actual:", list.Size())
+		t.Fatal("incorrect list size, expected:", 5, "actual:", list.Size())
 	}
 	for i := 0; i < list.Size(); i++ {
 		actual, err := list.Get(i)
@@ -619,15 +619,15 @@ func TestLinkedList_ToArray(t *testing.T) {
 	list.AddLast(4)
 	list.AddLast(5)
 	if list.Size() != 5 {
-		t.Fatal("wrong size, expected:", 3, "actual:", list.Size())
+		t.Fatal("incorrect size, expected:", 3, "actual:", list.Size())
 	}
 	actual := list.ToArray()
 	if len(actual) != list.Size() {
-		t.Fatal("wrong array size, expected:", list.Size(), "actual:", len(actual))
+		t.Fatal("incorrect array size, expected:", list.Size(), "actual:", len(actual))
 	}
 	expected := []int{1, 2, 3, 4, 5}
 	if !reflect.DeepEqual(expected, actual) {
-		t.Fatal("wrong array, expected:", expected, "actual:", actual)
+		t.Fatal("incorrect array, expected:", expected, "actual:", actual)
 	}
 }
 
@@ -637,42 +637,42 @@ func TestLinkedList_AddLast(t *testing.T) {
 	list.AddLast(2)
 	list.AddLast(3)
 	if list.Size() != 3 {
-		t.Fatal("wrong size, expected:", 3, "actual:", list.Size())
+		t.Fatal("incorrect size, expected:", 3, "actual:", list.Size())
 	}
 	first, fok := list.GetFirst()
 	if !fok {
 		t.Fatal("the value has not been added")
 	}
 	if first != 1 {
-		t.Fatal("wrong first value, expected:", 1, "actual:", first)
+		t.Fatal("incorrect first value, expected:", 1, "actual:", first)
 	}
 	last, lok := list.GetLast()
 	if !lok {
 		t.Fatal("last value has not been added")
 	}
 	if last != 3 {
-		t.Fatal("wrong last value, expected:", 3, "actual:", last)
+		t.Fatal("incorrect last value, expected:", 3, "actual:", last)
 	}
 }
 func TestLinkedList_AddLast_first(t *testing.T) {
 	list := NewLinkedList[int]()
 	list.AddLast(1)
 	if list.Size() != 1 {
-		t.Fatal("wrong size, expected:", 1, "actual:", list.Size())
+		t.Fatal("incorrect size, expected:", 1, "actual:", list.Size())
 	}
 	actual, ok := list.GetFirst()
 	if !ok {
 		t.Fatal("The value has not been added")
 	}
 	if actual != 1 {
-		t.Fatal("wrong value, expected:", 1, "actual:", actual)
+		t.Fatal("incorrect value, expected:", 1, "actual:", actual)
 	}
 	last, lok := list.GetLast()
 	if !lok {
 		t.Fatal("last value does not exists")
 	}
 	if last != 1 {
-		t.Fatal("wrong last value, expected:", 1, "actual:", last)
+		t.Fatal("incorrect last value, expected:", 1, "actual:", last)
 	}
 	if list.first != list.last {
 		t.Fatal("the last and first values are not the same")
@@ -685,14 +685,14 @@ func TestLinkedList_AddFirst(t *testing.T) {
 	list.AddFirst(2)
 	list.AddFirst(3)
 	if list.Size() != 3 {
-		t.Fatal("wrong size, expected:", 3, "actual:", list.Size())
+		t.Fatal("incorrect size, expected:", 3, "actual:", list.Size())
 	}
 	actual, ok := list.GetFirst()
 	if !ok {
 		t.Fatal("a value does not exists")
 	}
 	if actual != 3 {
-		t.Fatal("wrong value, expected:", 3, "actual:", actual)
+		t.Fatal("incorrect value, expected:", 3, "actual:", actual)
 	}
 
 	last, lok := list.GetLast()
@@ -700,28 +700,28 @@ func TestLinkedList_AddFirst(t *testing.T) {
 		t.Fatal("the last value doesn't exists")
 	}
 	if last != 1 {
-		t.Fatal("wrong last value, expected:", 1, "actual:", last)
+		t.Fatal("incorrect last value, expected:", 1, "actual:", last)
 	}
 }
 func TestLinkedList_AddFirst_first(t *testing.T) {
 	list := NewLinkedList[int]()
 	list.AddFirst(1)
 	if list.Size() != 1 {
-		t.Fatal("wrong size, expected:", 1, "actual:", list.Size())
+		t.Fatal("incorrect size, expected:", 1, "actual:", list.Size())
 	}
 	actual, ok := list.GetFirst()
 	if !ok {
 		t.Fatal("The value has not been added")
 	}
 	if actual != 1 {
-		t.Fatal("wrong value, expected:", 1, "actual:", actual)
+		t.Fatal("incorrect value, expected:", 1, "actual:", actual)
 	}
 	last, lok := list.GetLast()
 	if !lok {
 		t.Fatal("last value does not exists")
 	}
 	if last != 1 {
-		t.Fatal("wrong last value, expected:", 1, "actual:", last)
+		t.Fatal("incorrect last value, expected:", 1, "actual:", last)
 	}
 	if list.first != list.last {
 		t.Fatal("the last and first values are not the same")
