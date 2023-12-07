@@ -67,14 +67,14 @@ func TestLinkedList_RemoveAll(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got := tt.list.RemoveAll(tt.needRemove)
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("RemoveFirstOccurrence() got = %v, want %v", got, tt.want)
+				t.Errorf("RemoveAll() got = %v, want %v", got, tt.want)
 			}
 			gotArray := tt.list.ToArray()
 			if !reflect.DeepEqual(gotArray, tt.wantArray) {
-				t.Errorf("RemoveFirstOccurrence() gotArray = %v, wantArray %v", gotArray, tt.wantArray)
+				t.Errorf("RemoveAll() gotArray = %v, wantArray %v", gotArray, tt.wantArray)
 			}
 			if tt.list.Size() != len(gotArray) {
-				t.Errorf("RemoveFirstOccurrence() gotSize = %v, wantSize %v", len(gotArray), tt.list.Size())
+				t.Errorf("RemoveAll() gotSize = %v, wantSize %v", len(gotArray), tt.list.Size())
 			}
 		})
 	}
@@ -142,17 +142,17 @@ func TestLinkedList_RemoveLastOccurrence(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			gotValue, gotIndex := tt.list.RemoveLastOccurrence(tt.needRemove)
 			if !reflect.DeepEqual(gotValue, tt.want) {
-				t.Errorf("RemoveFirstOccurrence() got = %v, want %v", gotValue, tt.want)
+				t.Errorf("RemoveLastOccurrence() got = %v, want %v", gotValue, tt.want)
 			}
 			if gotIndex != tt.wantIndex {
-				t.Errorf("RemoveFirstOccurrence() gotIndex = %v, wantIndex %v", gotIndex, tt.wantIndex)
+				t.Errorf("RemoveLastOccurrence() gotIndex = %v, wantIndex %v", gotIndex, tt.wantIndex)
 			}
 			gotArray := tt.list.ToArray()
 			if !reflect.DeepEqual(gotArray, tt.wantArray) {
-				t.Errorf("RemoveFirstOccurrence() gotArray = %v, wantArray %v", gotArray, tt.wantArray)
+				t.Errorf("RemoveLastOccurrence() gotArray = %v, wantArray %v", gotArray, tt.wantArray)
 			}
 			if tt.list.Size() != len(gotArray) {
-				t.Errorf("RemoveFirstOccurrence() gotSize = %v, wantSize %v", len(gotArray), tt.list.Size())
+				t.Errorf("RemoveLastOccurrence() gotSize = %v, wantSize %v", len(gotArray), tt.list.Size())
 			}
 		})
 	}
