@@ -49,12 +49,23 @@ func (set *Set[T]) Clear() {
 func (set *Set[T]) Capacity() int {
 	return set.capacity
 }
-
+func (set *Set[T]) ToArray() []T {
+	result := make([]T, 0, len(set.mp))
+	for k := range set.mp {
+		result = append(result, k)
+	}
+	return result
+}
 func NewSet[T comparable]() Set[T] {
 	return NewSetCapacity[T](0)
 }
 func NewSetCapacity[T comparable](capacity int) Set[T] {
 	result := Set[T]{capacity: capacity}
 	result.Clear()
+	return result
+}
+func NewSetItems[T comparable](values ...T) Set[T] {
+	result := NewSetCapacity[T](len(values))
+	result.AddAll(values...)
 	return result
 }
