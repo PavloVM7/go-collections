@@ -1,24 +1,22 @@
 package collections
 
 import (
+	"fmt"
 	"reflect"
+	"runtime"
 	"testing"
 )
 
 func TestNewSet(t *testing.T) {
-	type testCase[T comparable] struct {
-		name string
-		want Set[T]
+	set := NewSet[int]()
+	if set.Size() != 0 {
+		t.Fatalf("invalid size, expected: %d, actual: %d", 0, set.Size())
 	}
-	tests := []testCase[int]{
-		// TODO: Add test cases.
+	if !set.IsEmpty() {
+		t.Fatal("the set isn't empty")
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := NewSet[int](); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("NewSet() = %v, want %v", got, tt.want)
-			}
-		})
+	if set.Capacity() != 0 {
+		t.Fatalf("invalid capacity, expected: %d, actual: %d", 0, set.Capacity())
 	}
 }
 
@@ -46,46 +44,55 @@ func TestNewSetCapacity(t *testing.T) {
 }
 
 func TestSet_Add(t *testing.T) {
-	type args[T comparable] struct {
-		value T
+	set := NewSet[int]()
+	values := []int{1, 2, 3}
+	for _, v := range values {
+		added := set.Add(v)
+		if !added {
+			t.Fatalf("value %v was not added to the set", v)
+		}
 	}
-	type testCase[T comparable] struct {
-		name string
-		set  Set[T]
-		args args[T]
-		want bool
+	if set.Size() != len(values) {
+		t.Fatalf("invalid set size, expected: %v, actual: %v", len(values), set.Size())
 	}
-	tests := []testCase[int]{
-		// TODO: Add test cases.
+	for _, v := range values {
+		added := set.Add(v)
+		if added {
+			t.Fatalf("dublicate value %v was added to the set", v)
+		}
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.set.Add(tt.args.value); got != tt.want {
-				t.Errorf("Add() = %v, want %v", got, tt.want)
-			}
-		})
+	if set.Size() != len(values) {
+		t.Fatalf("invalid set size, expected: %v, actual: %v", len(values), set.Size())
 	}
 }
 
 func TestSet_AddAll(t *testing.T) {
-	type args[T comparable] struct {
-		values []T
+	set := NewSet[string]()
+	values := []string{"string 1", "string 2", "string 3"}
+	values2 := []string{"string 4", "string 5"}
+
+	changed := set.AddAll(values...)
+	if !changed {
+		t.Fatalf("the set was not changed")
 	}
-	type testCase[T comparable] struct {
-		name string
-		set  Set[T]
-		args args[T]
-		want bool
+	if set.Size() != len(values) {
+		t.Fatalf("invalid size, expected: %d, actual: %d", len(values), set.Size())
 	}
-	tests := []testCase[int]{
-		// TODO: Add test cases.
+	changed = set.AddAll(values...)
+	if changed {
+		t.Fatalf("the set was changed when trying to add duplicate values")
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.set.AddAll(tt.args.values...); got != tt.want {
-				t.Errorf("AddAll() = %v, want %v", got, tt.want)
-			}
-		})
+	changed = set.AddAll(values2...)
+	if !changed {
+		t.Fatalf("the set was not changed")
+	}
+	expectedSize := len(values) + len(values2)
+	if set.Size() != expectedSize {
+		t.Fatalf("invalid size, expected: %d, actual: %d", expectedSize, set.Size())
+	}
+	changed = set.AddAll(values2...)
+	if changed {
+		t.Fatalf("the set was changed when trying to add duplicate values")
 	}
 }
 
@@ -155,7 +162,25 @@ func TestSet_IsEmpty(t *testing.T) {
 }
 
 func TestSet_Remove(t *testing.T) {
-	t.Fail()
+	set := NewSet[int]()
+	values := []int{1, 2, 3}
+	set.AddAll(values...)
+	if set.Size() != len(values) {
+		t.Fatalf("invalid set size, expected: %d, actual: %d", len(values), set.Size())
+	}
+	for _, value := range values {
+		removed := set.Remove(value)
+		if !removed {
+			t.Fatalf("known value %v was not removed", value)
+		}
+	}
+	if !set.IsEmpty() {
+		t.Fatal("set is not empty")
+	}
+	removed := set.Remove(111)
+	if removed {
+		t.Fatal("unknown value was removed")
+	}
 }
 
 func TestSet_Size(t *testing.T) {
@@ -167,8 +192,8 @@ func TestSet_Size(t *testing.T) {
 	tests := []testCase[int]{
 		{"empty", NewSet[int](), 0},
 		{"empty with capacity", NewSetCapacity[int](123), 0},
-		{"one", NewSetItems[int](1), 0},
-		{"three", NewSetItems[int](1, 2, 3), 0},
+		{"one", NewSetItems[int](1), 1},
+		{"three", NewSetItems[int](1, 2, 3), 3},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -179,6 +204,80 @@ func TestSet_Size(t *testing.T) {
 	}
 }
 
+func TestSet_Contains(t *testing.T) {
+	values := []string{"string 1", "string 2", "string 3"}
+	set := NewSetCapacity[string](len(values))
+	if !set.AddAll(values...) {
+		t.Fatalf("values was not added to the set")
+	}
+	for _, value := range values {
+		if !set.Contains(value) {
+			t.Fatalf("the set does not contain value %s", value)
+		}
+	}
+	unknown := "unknown string value"
+	if set.Contains(unknown) {
+		t.Fatal("the set contains an unknown value")
+	}
+}
+
 func TestSet_TrimToSize(t *testing.T) {
-	t.Fail()
+	const amount = 1_000
+	const rest = 20
+	set := NewSetCapacity[string](amount)
+	value := func(i int) string {
+		return fmt.Sprintf("this is a set long value %d", i)
+	}
+	for i := 1; i <= amount; i++ {
+		v := value(i)
+		if !set.Add(v) {
+			t.Fatalf("value %v was not added to the set", v)
+		}
+	}
+	if set.Size() != amount {
+		t.Fatalf("invalid set size, expected: %d, actual: %d", amount, set.Size())
+	}
+	var m1 runtime.MemStats
+	runtime.ReadMemStats(&m1)
+
+	for i := rest + 1; i <= amount; i++ {
+		v := value(i)
+		if !set.Remove(v) {
+			t.Fatalf("value %s was not removed from the set", v)
+		}
+	}
+	var m2 runtime.MemStats
+	runtime.ReadMemStats(&m2)
+
+	runtime.GC()
+
+	var m3 runtime.MemStats
+	runtime.ReadMemStats(&m3)
+
+	set.TrimToSize()
+
+	var m4 runtime.MemStats
+	runtime.ReadMemStats(&m4)
+
+	runtime.GC()
+
+	var m5 runtime.MemStats
+	runtime.ReadMemStats(&m5)
+
+	memToString := func(ms *runtime.MemStats) string {
+		return fmt.Sprintf("%d Kb", ms.Alloc/1024)
+	}
+
+	t.Logf("Memory after fill: %s; after remove: %s (GC: %s); after trim: %s (GC: %s)",
+		memToString(&m1), memToString(&m2), memToString(&m3), memToString(&m4), memToString(&m5))
+
+	if set.Size() != rest {
+		t.Fatalf("invalid set size, expected: %d, actual: %d", rest, set.Size())
+	}
+	for i := 1; i <= rest; i++ {
+		v := value(i)
+		if !set.Contains(v) {
+			t.Fatalf("the set does not contain value %s", v)
+		}
+	}
 }

@@ -22,6 +22,10 @@ func (set *Set[T]) AddAll(values ...T) bool {
 	}
 	return changed
 }
+func (set *Set[T]) Contains(value T) bool {
+	_, ok := set.mp[value]
+	return ok
+}
 func (set *Set[T]) Remove(value T) bool {
 	if _, ok := set.mp[value]; ok {
 		delete(set.mp, value)
