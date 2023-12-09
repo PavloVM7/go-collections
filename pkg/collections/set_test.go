@@ -222,7 +222,7 @@ func TestSet_Contains(t *testing.T) {
 }
 
 func TestSet_TrimToSize(t *testing.T) {
-	const amount = 1_000
+	const amount = 1_000_000
 	const rest = 20
 	set := NewSetCapacity[string](amount)
 	value := func(i int) string {
