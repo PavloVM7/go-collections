@@ -1,11 +1,26 @@
+// Copyright Ⓒ 2023 Pavlo Moisieienko. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
 package collections
 
 import (
 	"fmt"
 	"reflect"
 	"runtime"
+	"sort"
 	"testing"
 )
+
+func TestSet_ToSlice(t *testing.T) {
+	expected := []int{1, 2, 3, 4, 5}
+	set := NewSetItems[int](expected...)
+	array := set.ToSlice()
+	sort.Ints(array)
+	if !reflect.DeepEqual(array, expected) {
+		t.Fatalf("\nexpected: %v\n  actual: %v", expected, array)
+	}
+}
 
 func TestNewSet(t *testing.T) {
 	set := NewSet[int]()

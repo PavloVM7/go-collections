@@ -9,4 +9,5 @@ revive-no-tests:
     -exclude $(LISTS)/quick_sort_list_test.go \
     -exclude $(LISTS)/quick_sort_list_benchmark_test.go \
     -exclude $(COLLECTIONS)/collection_utils_test.go \
+    -exclude $(COLLECTIONS)/set_test.go \
     -formatter friendly ./...
