@@ -5,7 +5,7 @@ This module contains some NOT(!) thread safe collections
 ### Usage
 
 ```
-go get github.com/PavloVM7/go-collections@v0.1.0
+go get -u github.com/PavloVM7/go-collections
 ```
 
 ## LinkedList
