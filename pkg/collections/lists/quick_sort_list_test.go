@@ -73,6 +73,7 @@ func Test_sortItems_string_big(t *testing.T) {
 		}
 	}
 }
+
 func Test_sortItems_int_big(t *testing.T) {
 	expected := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 	shuffle := circleLeftShiftIterator(expected)
@@ -88,8 +89,8 @@ func Test_sortItems_int_big(t *testing.T) {
 			t.Fatalf("sortItems() got: %v, want: %v", actual, expected)
 		}
 	}
-
 }
+
 func Test_sortItems_int_big_revers(t *testing.T) {
 	expected := []int{10, 9, 8, 7, 6, 5, 4, 3, 2, 1}
 	shuffle := circleLeftShiftIterator(expected)
@@ -105,7 +106,6 @@ func Test_sortItems_int_big_revers(t *testing.T) {
 			t.Fatalf("sortItems() got: %v, want: %v", actual, expected)
 		}
 	}
-
 }
 
 func Test_circleLeftShift_string(t *testing.T) {
@@ -151,7 +151,6 @@ func Test_circleLeftShift_string(t *testing.T) {
 			}
 		})
 	}
-
 }
 func Test_circleLeftShift_int(t *testing.T) {
 	factorial := func(n int) int {

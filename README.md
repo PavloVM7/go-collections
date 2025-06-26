@@ -304,6 +304,11 @@ after TrimToSize() memory usage: 97 Kb, set size: 20
 
 ```
 
+## Simple Set
+
+Another implementation of Set. I recommend using it instead of `Set` unless you need to create a set of a certain capacity after clearing.
+This implementation does not save the initial capacity value of a set when it is created.
+
 ## Collections Utils
 
 ### Usage `CopyMap`

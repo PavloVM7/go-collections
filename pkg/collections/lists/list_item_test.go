@@ -6,7 +6,6 @@ import (
 )
 
 func Test_swapListItems(t *testing.T) {
-
 	type args[T any] struct {
 		list   *LinkedList[T]
 		index1 int
