@@ -1,5 +1,7 @@
 COLLECTIONS = pkg/collections
 LISTS = $(COLLECTIONS)/lists
+SIMPLE_SETS = $(COLLECTIONS)/simple_set
+
 revive:
 	$(GOPATH)/bin/revive -config ./revive.toml -formatter friendly ./...
 revive-no-tests:
@@ -10,4 +12,8 @@ revive-no-tests:
     -exclude $(LISTS)/quick_sort_list_benchmark_test.go \
     -exclude $(COLLECTIONS)/collection_utils_test.go \
     -exclude $(COLLECTIONS)/set_test.go \
+    -exclude $(SIMPLE_SETS)/set_test.go \
     -formatter friendly ./...
+
+test:
+	go test ./...

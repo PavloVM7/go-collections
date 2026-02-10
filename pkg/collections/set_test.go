@@ -88,18 +88,18 @@ func TestSet_AddAll(t *testing.T) {
 
 	changed := set.AddAll(values...)
 	if !changed {
-		t.Fatalf("the set was not changed")
+		t.Fatal("the set was not changed")
 	}
 	if set.Size() != len(values) {
 		t.Fatalf("invalid size, expected: %d, actual: %d", len(values), set.Size())
 	}
 	changed = set.AddAll(values...)
 	if changed {
-		t.Fatalf("the set was changed when trying to add duplicate values")
+		t.Fatal("the set was changed when trying to add duplicate values")
 	}
 	changed = set.AddAll(values2...)
 	if !changed {
-		t.Fatalf("the set was not changed")
+		t.Fatal("the set was not changed")
 	}
 	expectedSize := len(values) + len(values2)
 	if set.Size() != expectedSize {
@@ -107,7 +107,7 @@ func TestSet_AddAll(t *testing.T) {
 	}
 	changed = set.AddAll(values2...)
 	if changed {
-		t.Fatalf("the set was changed when trying to add duplicate values")
+		t.Fatal("the set was changed when trying to add duplicate values")
 	}
 }
 
@@ -223,7 +223,7 @@ func TestSet_Contains(t *testing.T) {
 	values := []string{"string 1", "string 2", "string 3"}
 	set := NewSetCapacity[string](len(values))
 	if !set.AddAll(values...) {
-		t.Fatalf("values was not added to the set")
+		t.Fatal("values was not added to the set")
 	}
 	for _, value := range values {
 		if !set.Contains(value) {

@@ -1,5 +1,20 @@
 enableAllRules = true
+
 [rule.line-length-limit]
 arguments = [120]
+
 [rule.add-constant]
 arguments = [{ maxLitCount = "3", allowStrs = "\"\"", allowInts = "0,1", allowFloats = "0.0,0.,1.0,1." }]
+Exclude = ["TEST"]
+
+[rule.call-to-gc]
+exclude = ["TEST"]
+
+[rule.cognitive-complexity]
+exclude = ["TEST"]
+
+[rule.cyclomatic]
+exclude = ["TEST"]
+
+[rule.function-length]
+exclude = ["TEST"]
